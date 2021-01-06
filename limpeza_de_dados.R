@@ -12,4 +12,4 @@ db <- read_csv("/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-suces
       #round(digits = 2)
   )
 
-
+#falta limpar o nome dos cabeçalhos
