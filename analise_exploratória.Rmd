@@ -1,0 +1,338 @@
+---
+title: "Explorando os dados"
+author: "Mateus Reis"
+date: "31/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+	echo = FALSE,
+	message = TRUE,
+	warning = FALSE
+)
+library(tidyverse)
+library(knitr)#função do kable
+db<-read_csv("/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-sucesso-profissional-professor-matem-tica-df/base_tcc.csv")
+```
+
+```{r}
+
+#----------Funções--------------------#
+
+#Cria um histograma geral
+histograma.geral<-function(entrada, leg.x,titulo){
+  entrada<-as.data.frame(entrada)
+  ggplot(entrada, aes(x = entrada )) +
+  geom_histogram(fill='blue')+
+  theme_bw()+
+  labs(
+        x = leg.x,
+        y = "Frequência",
+        title = titulo
+    )  
+}
+
+
+#Cria um histograma detalhado
+
+histograma.multiplo<-function(db, leg.x,titulo){
+  #db<-as.data.frame(db)
+  ggplot(db, aes(x = entrada )) +
+  geom_histogram(fill='blue')+
+  theme_bw()+
+  labs(
+        x = leg.x,
+        y = "Frequência",
+        title = titulo
+    )+
+    facet_wrap(~db$nivel)
+}
+
+#Sumariza dados numéricos:
+sumário<-function(x){
+  dados<-data.frame("Máximo"=max(x),"Mínimo"=min(x),"Variância"=var(x), "Des. Padrao"=sd(x), "Média"=mean(x), "Mediana"=median(x))
+  
+  return(kable(dados))
+}
+
+
+graf.boxplot.1.VAR<-function(entrada, leg.x,leg.y, titulo){
+    ggplot(entrada,aes(x = "", y = entrada)) +
+    geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+    theme_bw()+
+    labs(
+        x = leg.x,
+        y = leg.y,
+        title = titulo
+    )
+}
+
+graf.boxplot.mul.var<-function(db, leg.x,leg.y, titulo){
+  
+   ggplot(db,aes(x = nivel.x, y = dados, fill=nivel.x)) +
+    geom_boxplot(outlier.colour = "red", outlier.shape = 1) +
+    guides(fill = FALSE)+
+    theme_bw()+
+    theme(axis.text.x = element_text(angle = 30, hjust = 1))+
+    labs(
+        x = leg.x,
+        y = leg.y,
+        title = titulo
+    )
+}
+
+graf.setor.geral <- function(db, titulo) {
+  ggplot(db, aes(x = "", y = Freq, fill = Var1)) + 
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y", start = 0) + 
+  geom_text(aes(label = paste0(round((Freq/sum(Freq)) * 100, 2), "%")), position = position_stack(vjust = 0.5)) +
+  #scale_fill_manual(values = c("#55DDE0", "#33658A", "#2F4858"))  + 
+  labs(x = NULL, y = NULL, fill = NULL, title = titulo) +
+  theme_classic() + 
+  theme(axis.line = element_blank(),
+        axis.text = element_blank(),
+        axis.ticks = element_blank(),
+        plot.title = element_text(hjust = 0.5, color = "#666666"),
+        legend.position = "bottom",
+        legend.title = element_blank())
+}
+
+
+graf.barra.relacao<-function(db,leg.x,leg.y,titulo){
+  ggplot(db,aes(x = entrada)) +
+  geom_bar( aes(fill =entrada))+
+  theme(axis.text.x = element_blank(),
+        legend.position = "bottom",
+        legend.title = element_blank())+
+  labs(
+        x = leg.x,
+        y = leg.y,
+        title = titulo
+    )+
+    facet_wrap(~db$esfera)
+    
+}
+
+```
+
+## Anos de experiência
+
+Geral
+```{r}
+histograma.geral(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`,"Geral","Tempo de atuação profissional - Geral")
+```
+
+Específico
+```{r}
+histograma.multiplo(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"entrada"=db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`),"Tempo no local de trabalho"," Histograma tempo de atuação profissional: Por Esferas")
+```
+```{r}
+sumário(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`)
+```
+
+Box Plot (Geral)
+```{r}
+graf.boxplot.1.VAR(data.frame("entrada"=db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`),"","Anos", "Tempo de atuação profissional: Geral")
+
+```
+
+Box Plot (Por esferas)
+```{r}
+graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"dados"=db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`),"","Tempo de Atuação", "Tempo de atuação profissional: Por esferas")
+
+```
+
+# Tempo no local atual local de trabalho
+
+
+Geral
+```{r}
+histograma.geral(db$`Considere sua contratação atual Já são quantos anos nessa instituição Caso trabalhe em mais de uma instituição informe sua contratação mais antiga digite o total em anos completos`,"Geral","Tempo de atuação profissional - Geral")
+
+```
+
+Específico
+```{r}
+histograma.multiplo(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"entrada"=db$`Considere sua contratação atual Já são quantos anos nessa instituição Caso trabalhe em mais de uma instituição informe sua contratação mais antiga digite o total em anos completos`),"Tempo no local de trabalho"," Histograma tempo de atuação profissional: Por Esferas")
+```
+```{r}
+sumário(db$`Considere sua contratação atual Já são quantos anos nessa instituição Caso trabalhe em mais de uma instituição informe sua contratação mais antiga digite o total em anos completos`)
+```
+```{r}
+graf.boxplot.1.VAR(data.frame("entrada"=db$`Considere sua contratação atual Já são quantos anos nessa instituição Caso trabalhe em mais de uma instituição informe sua contratação mais antiga digite o total em anos completos`),"","Anos", "Tempo no atual local de trabalho: Geral")
+```
+Box Plot (Por esferas)
+```{r}
+graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"dados"=db$`Considere sua contratação atual Já são quantos anos nessa instituição Caso trabalhe em mais de uma instituição informe sua contratação mais antiga digite o total em anos completos`),"","Tempo de Atuação", "Tempo no atual local de trabalho: Por esferas")
+
+```
+
+# Local de atuação profissional (explorar melhor)
+
+Geral
+```{r}
+kable(ra<-as.data.frame(sort(table(db$`Selecione a RA onde você trabalha`),decreasing = T)),col.names = c("RA","Freq."))
+```
+
+Específico
+```{r}
+ifb.ra<-as.data.frame(sort(table(subset(db$`Selecione a RA onde você trabalha`,db$`Atualmente considere sua maior carga horária`=="Trabalha na Rede Federal (Instituto Federal de Brasília)")),decreasing = T))
+
+seedf.ra<-as.data.frame(sort(table(subset(db$`Selecione a RA onde você trabalha`,db$`Atualmente considere sua maior carga horária`!="Trabalha na Rede Federal (Instituto Federal de Brasília)")),decreasing = T))
+
+```
+
+Geral
+```{r}
+
+graf.setor.geral(ra,"RA: Geral")
+
+```
+
+IFB
+```{r}
+graf.setor.geral(ifb.ra,"RA: IFB")
+```
+SEEDF
+```{r}
+graf.setor.geral(seedf.ra,"RA: SEEDF")
+```
+
+
+# Genero
+Específico
+```{r}
+ifb.genero<-as.data.frame(sort(table(subset(db$Gênero,db$`Atualmente considere sua maior carga horária`=="Trabalha na Rede Federal (Instituto Federal de Brasília)")),decreasing = T))
+
+seedf.genero<-as.data.frame(sort(table(subset(db$Gênero,db$`Atualmente considere sua maior carga horária`!="Trabalha na Rede Federal (Instituto Federal de Brasília)")),decreasing = T))
+
+```
+
+Geral
+```{r}
+kable(genero<-as.data.frame(sort(table(db$Gênero),decreasing = T)),col.names = c("RA","Freq."))
+graf.setor.geral(genero,"Gênero: Geral")
+
+```
+
+IFB
+```{r}
+graf.setor.geral(ifb.genero,"Gênero: IFB")
+```
+SEEDF
+```{r}
+graf.setor.geral(seedf.genero,"Gênero: SEEDF")
+```
+
+# Quantidade de Cursos de curta duração
+```{r}
+curso.curto<-db$`Possui algum curso de formação complementar concluído Caso sim digite a quantidade Caso não tenha marque zero Considere formação complementar todo curso com carga horária entre 30h e 150h`
+```
+
+Resumo
+```{r}
+sumário(curso.curto)
+```
+
+Box Plot (Geral)
+```{r}
+graf.boxplot.1.VAR(data.frame("entrada"=curso.curto),"","Quantidade", "Cursos de Formação Complementar: Geral")
+
+```
+
+ Box Plot (Por esferas)
+```{r}
+graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"dados"=curso.curto),"","Quantidade", "Cursos de Formação Complementar: Por esferas")
+
+```
+
+ Histograma (Geral)
+```{r}
+histograma.geral(data.frame("entrada"=curso.curto),"Quantidade","Cursos de Formação Complementar: Geral")
+```
+
+ Histograma (Por esferas) 
+```{r}
+histograma.multiplo(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"entrada"=curso.curto),"Quantidade","Cursos de Formação complementar:Específico")
+```
+
+# Anos de formado:
+```{r}
+db$`Graduou em Matemática em que ano`[19]<-1991
+tempo.formado<-2020-db$`Graduou em Matemática em que ano`
+```
+
+Resumo
+```{r}
+sumário(tempo.formado)
+```
+
+Box Plot (Geral)
+```{r}
+graf.boxplot.1.VAR(data.frame("entrada"=tempo.formado),"","Anos", "Quantidade de tempo desde que se graduou: Geral")
+
+```
+
+Box Plot (Por esferas)
+```{r}
+graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"dados"=tempo.formado),"","Anos", "Quantidade de tempo desde que se graduou: Por esferas")
+
+```
+
+Histograma (Geral)
+```{r}
+histograma.geral(data.frame("entrada"=tempo.formado),"Anos","Quantidade de tempo desde que se graduou: Geral")
+```
+
+Histograma (Por esferas) 
+```{r}
+histograma.multiplo(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"entrada"=tempo.formado),"Anos","Quantidade de tempo desde que se graduou: Por Esferas")
+```
+
+
+# Especialização
+```{r}
+especializacao<-as.data.frame(sort(table(db$`Possui alguma especialização`),decreasing = T))
+graf.setor.geral(especializacao," Especialização ")
+```
+
+```{r}
+graf.barra.relacao(data.frame("entrada"=db$`Possui alguma especialização`,"esfera"=db$`Atualmente considere sua maior carga horária`),"","Frequência","Especialização")
+```
+
+
+# Mestrado
+```{r}
+mestrado<-as.data.frame(sort(table(db$`Possui mestrado`),decreasing = T))
+graf.setor.geral(mestrado," Mestrado")
+
+```
+
+```{r}
+graf.barra.relacao(data.frame("entrada"=db$`Possui mestrado`,"esfera"=db$`Atualmente considere sua maior carga horária`),"","Frequência","Mestrado")
+```
+
+
+# Doutorado
+```{r}
+doutorado<-as.data.frame(sort(table(db$`Possui doutorado`),decreasing = T))
+graf.setor.geral(doutorado," Doutorado")
+```
+
+```{r}
+graf.barra.relacao(data.frame("entrada"=db$`Possui doutorado`,"esfera"=db$`Atualmente considere sua maior carga horária`),"","Frequência","Doutorado")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+

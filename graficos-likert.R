@@ -26,7 +26,7 @@ Graf.likert<-function(lik){
 
 # Aspectos de competência profissional
 
-Comp.profissional<-db[,c(14:17)]
+Comp.profissional<-db[,c(16:19)]
 Graf.likert(Comp.profissional)
 
 # Relações Interpessoais

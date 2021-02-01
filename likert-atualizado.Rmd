@@ -1,0 +1,175 @@
+---
+title: "graficos-likert"
+author: "Mateus Reis"
+date: "31/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse) 
+library(likert)
+library(kableExtra)
+
+db<-read_csv("/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-sucesso-profissional-professor-matem-tica-df/base_tcc.csv")
+
+
+Graf.likert<-function(lik){
+  
+  
+  lik[ , 1:length(lik)] <- lapply(  lik[ , 1:length(lik)], function(x){ factor(x, 
+                                                                                     levels = c('Discordo totalmente.', 
+                                                                                                'Discordo parcialmente.', 
+                                                                                                'Nem concordo e nem discordo.',
+                                                                                                'Concordo parcialmente.', 
+                                                                                                'Concordo totalmente.'), 
+                                                                                     labels = c('Discordo totalmente.', 
+                                                                                                'Discordo parcialmente.', 
+                                                                                                'Nem concordo e nem discordo.',
+                                                                                                'Concordo parcialmente.', 
+                                                                                                'Concordo totalmente.'))})
+  lik.1<-likert(as.data.frame(lik))
+  
+  return(plot(lik.1, wrap = 60, text.size=5) + theme(axis.text.y = element_text(size="10")))
+  
+}
+
+## A função abaixo separa por instituição
+
+Graf.likert.cat<-function(lik,categoria){
+  
+
+  lik[ , 1:length(lik)] <- lapply(  lik[ , 1:length(lik)], function(x){ factor(x,
+                                                                                     levels = c('Discordo totalmente.',
+                                                                                                'Discordo parcialmente.',
+                                                                                                'Nem concordo e nem discordo.',
+                                                                                                'Concordo parcialmente.',
+                                                                                                'Concordo totalmente.'),
+                                                                                     labels = c('Discordo totalmente.',
+                                                                                                'Discordo parcialmente.',
+                                                                                                'Nem concordo e nem discordo.',
+                                                                                                'Concordo parcialmente.',
+                                                                                                'Concordo totalmente.'))})
+  
+  
+  categoria[ , 1:length(categoria)] <- lapply(  categoria[ , 1:length(categoria)], function(x){ factor(x, 
+                                                                                     levels = c('Na Secretaria de Educação do Distrito Federal', 
+                                                                                                'Trabalha na Rede Federal (Instituto Federal de Brasília)'), 
+                                                                                     labels = c('SEEDF', 
+                                                                                                'IFB'))})
+  df<-cbind.data.frame(categoria,lik)
+  
+  if(length(df)>2){
+      return(plot(likert(df[,c(2:length(df))],grouping=df[,1]))+ theme(axis.text.y = element_text(size="5")))#Só funcionou desse modo. Só Deus e o desenvolvedor sambem o porquê.Mas aparentemente tem que estar no mesmo data frame e a função não aceita outro tipo de entrada.
+  }else{
+    return(df)
+  }
+
+}
+
+
+```
+
+
+
+
+# Aspectos de competência profissional
+```{r}
+Comp.profissional<-db[,c(16:19)]
+Graf.likert(Comp.profissional)
+```
+
+```{r}
+Graf.likert.cat(db[,c(16:19)],db[,5])
+```
+
+
+
+# Relações Interpessoais
+
+```{r}
+Rel.Int<-db[,c(20:23)]
+Graf.likert(Rel.Int)
+```
+
+```{r}
+Graf.likert.cat(db[,c(20:23)],db[,5])
+```
+
+
+# Riscos e iniciativas
+
+```{r}
+Ris.Ini<-db[,c(24:27)]  
+Graf.likert(Ris.Ini)
+```
+
+```{r}
+Graf.likert.cat(db[,c(24:27)],db[,5])
+
+```
+  
+  
+# Interação com alunos
+
+```{r}
+Int.Alun<-db[,c(28:32)]  
+Graf.likert(Int.Alun)
+```
+```{r}
+Graf.likert.cat(db[,c(28:32)],db[,5])
+```
+
+
+# Autossatisfação
+
+```{r}
+Autossatisfacao<-db[,c(33:38)]  
+Graf.likert(Autossatisfacao)
+
+```
+
+```{r}
+Graf.likert.cat(db[,c(33:38)],db[,5])
+```
+
+
+# Autoaceitação
+
+```{r}
+Autoaceitacao<-db[,c(39:44)]
+Graf.likert(Autoaceitacao)
+```
+```{r}
+Graf.likert.cat(db[,c(39:44)],db[,5])
+```
+
+
+# Estrutura e localização da instituição de trabalho
+
+```{r}
+Local.Trab<-db[,c(45:48)]
+Graf.likert(Local.Trab)
+```
+```{r}
+Graf.likert.cat(db[,c(45:48)],db[,5])
+```
+
+
+# Sucesso profissional
+
+```{r}
+Sucesso.Prof<-db[,50]
+Graf.likert(Sucesso.Prof)
+```
+
+
+
+```{r}
+a<-Graf.likert.cat(db[,50],db[,5])
+
+plot(likert(as.data.frame(a$`Atualmente me considero um profissional bem sucedido na área de educação`),grouping=a$`Atualmente considere sua maior carga horária`))+ theme(axis.text.y = element_text(size="10"))
+
+```
+
+
