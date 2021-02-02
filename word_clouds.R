@@ -23,12 +23,12 @@ freq.palavras=function(vetor){
   vetor=vetor %>% 
     #gsub("[^A-Za-z0-9]", " ", .) %>%  
  
-    removeWords(., stopwords("portuguese"))   %>% 
+    tolower() %>% 
+    removeWords(., c(stopwords("portuguese"),"professor","professora","sucesso","porque","me","se","considero","e","matemática"))   %>% 
     stri_trans_general(., "Latin-ASCII") %>% 
     iconv(., "UTF-8", "ASCII//TRANSLIT") %>% 
     removePunctuation() %>% 
     removeNumbers() %>%
-    tolower() %>% 
     gsub("\n", " ", ., fixed = T) %>% 
     gsub(" ", " ", .) 
   #transforma numa lista detalhada: revisar todo esse código
@@ -84,13 +84,12 @@ vetor=str_flatten(na.omit(vetor),collapse = " ")
 
 vetor=vetor %>% 
   #gsub("[^A-Za-z0-9]", " ", .) %>%  
-  
-  removeWords(., c(stopwords("portuguese"),"professor","professora","sucesso","porque","me","se","considero","e"))   %>% 
+  tolower() %>% 
+  removeWords(., c(stopwords("portuguese"),"professor","professora","sucesso","porque","me","se","considero","e","matemática"))   %>% 
   stri_trans_general(., "Latin-ASCII") %>% 
   iconv(., "UTF-8", "ASCII//TRANSLIT") %>% 
   removePunctuation() %>% 
   removeNumbers() %>%
-  tolower() %>% 
   gsub("\n", " ", ., fixed = T) %>% 
   gsub(" ", " ", .) 
   

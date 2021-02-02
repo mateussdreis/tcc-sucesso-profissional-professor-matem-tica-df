@@ -1,0 +1,104 @@
+
+
+```{r}
+library(tidyverse)
+library(likert)
+library(psych) # Cronbach's alpha
+```
+
+
+
+# ajustando os niveis
+```{r}
+db<-read_csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vQO3zDHq-lTwrlUmh-8FrJ3XsYUe1qQwXlYOQ18gdCPpqg1_q_6OKR1vr5GiXZnRxEdPapBfQfyE-72/pub?output=csv")
+
+
+ajuste_niveis <- function(x) {
+  niveis <- c(
+    'Discordo totalmente', 
+    'Discordo parcialmente', 
+    'Nem concordo e nem discordo',
+    'Concordo parcialmente', 
+    'Concordo totalmente'
+  )
+  x = as.factor(x)
+  levels(x) = c(levels(x), setdiff(niveis, levels(x)))
+  x = factor(x, levels = niveis)
+  return(x)
+}
+
+for (j in 1:ncol(db)) {
+  if (grepl('Marque apenas', names(db)[j])) {
+    db[, j] <- db[, j] %>% 
+      unlist() %>% 
+      str_remove('\\.') %>% 
+      trimws() %>% 
+      ajuste_niveis()
+  }
+}
+
+lapply(db, summary)
+
+```
+
+
+# consistencia escala likert --------------------------------------------------
+```{r}
+
+# O alfa de Cronbach dirá se o teste que você projetou 
+# está medindo com precisão a variável de interesse.
+# alpha > .7 ja segue como aceitavel.
+
+tmp <- db[, grepl('Marque apenas', names(db))] %>% 
+  sapply(as.numeric)
+x <- psych::alpha(tmp, check.keys = T, warnings = F)
+
+# consistencia global
+summary(x)
+
+# consistencia dos itenss
+
+cons.itens<-x[["item.stats"]]
+
+View(cons.itens)
+
+```
+
+
+
+#LOO
+
+```{r}
+
+# usando o leave-one-out (LOO) para detectar
+# questoes problematicas
+# isso e uma tecnica de validacao cruzada
+alphas <- NULL
+for (i in 1:nrow(tmp)) {
+  x <- summary(psych::alpha(tmp[-i, ], check.keys = T, warnings = F, n.iter = 1000))
+  alphas <- rbind.data.frame(
+    alphas,
+    cbind.data.frame('linha' = i, 'alpha' = x)
+  )
+}
+alphas <- as_tibble(alphas)
+alphas
+```
+
+  
+
+#--------Salvando------------------
+
+
+## Consistência global
+
+```{r}
+write_csv(cons.itens,"/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-sucesso-profissional-professor-matem-tica-df/resultados teste/consistencia_itens.csv")
+
+write_csv(alphas,"/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-sucesso-profissional-professor-matem-tica-df/resultados teste/consistencia_LOO_alphas.csv")
+
+```
+
+
+
+
