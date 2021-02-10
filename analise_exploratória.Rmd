@@ -14,7 +14,10 @@ knitr::opts_chunk$set(
 library(tidyverse)
 library(knitr)#função do kable
 db<-read_csv("/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-sucesso-profissional-professor-matem-tica-df/base_tcc.csv")
+
 ```
+
+
 
 ```{r}
 
@@ -22,15 +25,22 @@ db<-read_csv("/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-sucesso
 
 #Cria um histograma geral
 histograma.geral<-function(entrada, leg.x,titulo){
-  entrada<-as.data.frame(entrada)
-  ggplot(entrada, aes(x = entrada )) +
-  geom_histogram(fill='blue')+
-  theme_bw()+
-  labs(
-        x = leg.x,
-        y = "Frequência",
-        title = titulo
-    )  
+  
+  hist(entrada,
+  xlab=leg.x,
+  ylab = "Freq. Absoluta",
+  main=titulo)
+  
+  
+  # entrada<-as.data.frame(entrada)
+  # ggplot(entrada, aes(x = entrada )) +
+  # geom_histogram(fill='blue')+
+  # theme_bw()+
+  # labs(
+  #       x = leg.x,
+  #       y = "Frequência",
+  #       title = titulo
+  #   )  
 }
 
 
@@ -39,7 +49,7 @@ histograma.geral<-function(entrada, leg.x,titulo){
 histograma.multiplo<-function(db, leg.x,titulo){
   #db<-as.data.frame(db)
   ggplot(db, aes(x = entrada )) +
-  geom_histogram(fill='blue')+
+  geom_histogram(color="darkblue",fill='blue',binwidth=1)+
   theme_bw()+
   labs(
         x = leg.x,
@@ -121,6 +131,9 @@ graf.barra.relacao<-function(db,leg.x,leg.y,titulo){
 Geral
 ```{r}
 histograma.geral(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`,"Geral","Tempo de atuação profissional - Geral")
+
+# hist(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`, probability = T)
+# lines(density(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`))
 ```
 
 Específico
@@ -249,7 +262,7 @@ graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior car
 
  Histograma (Geral)
 ```{r}
-histograma.geral(data.frame("entrada"=curso.curto),"Quantidade","Cursos de Formação Complementar: Geral")
+histograma.geral(curso.curto,"Quantidade","Cursos de Formação Complementar: Geral")
 ```
 
  Histograma (Por esferas) 
@@ -282,7 +295,7 @@ graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior car
 
 Histograma (Geral)
 ```{r}
-histograma.geral(data.frame("entrada"=tempo.formado),"Anos","Quantidade de tempo desde que se graduou: Geral")
+histograma.geral(tempo.formado,"Anos","Quantidade de tempo desde que se graduou: Geral")
 ```
 
 Histograma (Por esferas) 
@@ -323,12 +336,122 @@ graf.setor.geral(doutorado," Doutorado")
 ```{r}
 graf.barra.relacao(data.frame("entrada"=db$`Possui doutorado`,"esfera"=db$`Atualmente considere sua maior carga horária`),"","Frequência","Doutorado")
 ```
+# Idade
+
+Geral
+```{r}
+histograma.geral(db$idade,"Geral","Idade")
+
+# hist(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`, probability = T)
+# lines(density(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`))
+```
+
+Específico
+```{r}
+histograma.multiplo(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"entrada"=db$idade),"Idade"," Histograma tempo de atuação profissional: Por Esferas")
+```
 
 
 
 
+```{r}
+sumário(db$idade)
+```
+
+Box Plot (Geral)
+```{r}
+graf.boxplot.1.VAR(data.frame("entrada"=db$idade),"","Anos", "Idade: Geral")
+
+```
+
+Box Plot (Por esferas)
+```{r}
+graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"dados"=db$idade),"","Tempo de Atuação", "Tempo de atuação profissional: Por esferas")
+
+```
+
+# Tempo de experiencia - Tempo no atual local de trabalho 
+```{r}
+
+tempos<-(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos` - db$`Considere sua contratação atual Já são quantos anos nessa instituição Caso trabalhe em mais de uma instituição informe sua contratação mais antiga digite o total em anos completos`)
+
+```
 
 
+Geral
+```{r}
+histograma.geral(tempos,"Tempo","Tempo de experiencia - Tempo no atual local de trabalho - Geral")
+
+# hist(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`, probability = T)
+# lines(density(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`))
+```
+
+Específico
+```{r}
+histograma.multiplo(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"entrada"=tempos),"Idade"," Histograma tempo de atuação profissional: Por Esferas")
+```
+
+
+
+
+```{r}
+sumário(tempos)
+```
+
+Box Plot (Geral)
+```{r}
+graf.boxplot.1.VAR(data.frame("entrada"=tempos),"","Anos", "Idade: Geral")
+
+```
+
+Box Plot (Por esferas)
+```{r}
+graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"dados"=tempos),"","Tempo de Atuação", "Tempo de atuação profissional: Por esferas")
+
+```
+
+#Tempo desde que se graduou - Tempo no local de trabalho 
+```{r}
+
+db$`Graduou em Matemática em que ano`[19]<-1991
+
+anos.formado<-(2020 - db$`Graduou em Matemática em que ano`)
+
+tempo.2<-(anos.formado- db$`Considere sua contratação atual Já são quantos anos nessa instituição Caso trabalhe em mais de uma instituição informe sua contratação mais antiga digite o total em anos completos`)
+
+```
+
+Geral
+```{r}
+histograma.geral(tempos,"Tempo","Tempo de experiencia - Tempo no atual local de trabalho - Geral")
+
+# hist(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`, probability = T)
+# lines(density(db$`Enquanto docente qual seu tempo de atuação profissional digite o total em anos completos`))
+```
+
+Específico
+```{r}
+histograma.multiplo(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"entrada"=tempo.2),"Idade"," Tempo desde que se graduou - Tempo no local de trabalho : Por Esferas")
+```
+
+
+
+
+```{r}
+sumário(tempo.2)
+```
+
+Box Plot (Geral)
+```{r}
+graf.boxplot.1.VAR(data.frame("entrada"=tempo.2),"","Anos", "Idade: Geral")
+
+```
+
+Box Plot (Por esferas)
+```{r}
+graf.boxplot.mul.var(data.frame("nivel.x"=db$`Atualmente considere sua maior carga horária`,"dados"=tempo.2),"","Tempo de Atuação", "Tempo desde que se graduou - Tempo no local de trabalho : Por esferas")
+
+```
 
 
 

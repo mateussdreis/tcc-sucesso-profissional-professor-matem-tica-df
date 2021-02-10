@@ -23,18 +23,18 @@ Graf.likert<-function(lik){
                                                                                                 'Nem concordo e nem discordo.',
                                                                                                 'Concordo parcialmente.', 
                                                                                                 'Concordo totalmente.'), 
-                                                                                     labels = c('Discordo totalmente.', 
-                                                                                                'Discordo parcialmente.', 
+                                                                                     labels = c('Discordo', 
+                                                                                                'Discordo', 
                                                                                                 'Nem concordo e nem discordo.',
-                                                                                                'Concordo parcialmente.', 
-                                                                                                'Concordo totalmente.'))})
+                                                                                                'Concordo', 
+                                                                                                'Concordo'))})
   lik.1<-likert(as.data.frame(lik))
   
-  return(plot(lik.1, wrap = 60, text.size=5) + theme(axis.text.y = element_text(size="10")))
+  return(plot(lik.1,wrap = 30) + theme(axis.text.y = element_text(size="10")))
   
 }
 
-## A função abaixo separa por instituição
+  ## A função abaixo separa por instituição
 
 Graf.likert.cat<-function(lik,categoria){
   
@@ -45,11 +45,11 @@ Graf.likert.cat<-function(lik,categoria){
                                                                                                 'Nem concordo e nem discordo.',
                                                                                                 'Concordo parcialmente.',
                                                                                                 'Concordo totalmente.'),
-                                                                                     labels = c('Discordo totalmente.',
-                                                                                                'Discordo parcialmente.',
+                                                                                     labels = c('Discordo',
+                                                                                                'Discordo',
                                                                                                 'Nem concordo e nem discordo.',
-                                                                                                'Concordo parcialmente.',
-                                                                                                'Concordo totalmente.'))})
+                                                                                                'Concordo',
+                                                                                                'Concordo'))})
   
   
   categoria[ , 1:length(categoria)] <- lapply(  categoria[ , 1:length(categoria)], function(x){ factor(x, 
@@ -60,7 +60,7 @@ Graf.likert.cat<-function(lik,categoria){
   df<-cbind.data.frame(categoria,lik)
   
   if(length(df)>2){
-      return(plot(likert(df[,c(2:length(df))],grouping=df[,1]))+ theme(axis.text.y = element_text(size="5")))#Só funcionou desse modo. Só Deus e o desenvolvedor sambem o porquê.Mas aparentemente tem que estar no mesmo data frame e a função não aceita outro tipo de entrada.
+      return(plot(likert(df[,c(2:length(df))],grouping=df[,1]))+ theme(axis.text.y = element_text(size="7")))#Só funcionou desse modo. Só Deus e o desenvolvedor sambem o porquê.Mas aparentemente tem que estar no mesmo data frame e a função não aceita outro tipo de entrada.
   }else{
     return(df)
   }
@@ -75,98 +75,175 @@ Graf.likert.cat<-function(lik,categoria){
 
 # Aspectos de competência profissional
 ```{r}
-Comp.profissional<-db[,c(16:19)]
+Comp.profissional<-db[,c(15:16)]
 Graf.likert(Comp.profissional)
 ```
 
+
 ```{r}
-Graf.likert.cat(db[,c(16:19)],db[,5])
+Comp.profissional<-db[,c(17:18)]
+Graf.likert(Comp.profissional)
 ```
 
+
+```{r}
+Graf.likert.cat(db[,c(15:16)],db[,4])
+```
+
+```{r}
+Graf.likert.cat(db[,c(17:18)],db[,4])
+```
 
 
 # Relações Interpessoais
 
 ```{r}
-Rel.Int<-db[,c(20:23)]
+Rel.Int<-db[,c(21:22)]
 Graf.likert(Rel.Int)
 ```
 
 ```{r}
-Graf.likert.cat(db[,c(20:23)],db[,5])
+Rel.Int<-db[,c(19:20)]
+Graf.likert(Rel.Int)
+```
+
+```{r}
+Graf.likert.cat(db[,c(19:20)],db[,4])
+```
+
+```{r}
+Graf.likert.cat(db[,c(21:22)],db[,4])
 ```
 
 
 # Riscos e iniciativas
 
 ```{r}
-Ris.Ini<-db[,c(24:27)]  
+Ris.Ini<-db[,c(23:24)]  
 Graf.likert(Ris.Ini)
 ```
 
 ```{r}
-Graf.likert.cat(db[,c(24:27)],db[,5])
+Ris.Ini<-db[,c(25:26)]  
+Graf.likert(Ris.Ini)
+```
+
+```{r}
+Graf.likert.cat(db[,c(23:24)],db[,4])
 
 ```
   
+
+```{r}
+Graf.likert.cat(db[,c(25:26)],db[,4])
+
+```
   
 # Interação com alunos
 
 ```{r}
-Int.Alun<-db[,c(28:32)]  
+Int.Alun<-db[,c(27:28)]  
 Graf.likert(Int.Alun)
 ```
+
+
 ```{r}
-Graf.likert.cat(db[,c(28:32)],db[,5])
+Int.Alun<-db[,c(29:31)]  
+Graf.likert(Int.Alun)
 ```
 
+
+```{r}
+Graf.likert.cat(db[,c(27:28)],db[,4])
+```
+
+```{r}
+Graf.likert.cat(db[,c(29:31)],db[,4])
+```
 
 # Autossatisfação
 
 ```{r}
-Autossatisfacao<-db[,c(33:38)]  
+Autossatisfacao<-db[,c(32:34)]  
 Graf.likert(Autossatisfacao)
 
 ```
 
+
 ```{r}
-Graf.likert.cat(db[,c(33:38)],db[,5])
+Autossatisfacao<-db[,c(35:37)]  
+Graf.likert(Autossatisfacao)
+
+```
+
+
+
+```{r}
+Graf.likert.cat(db[,c(32:34)],db[,4])
+```
+
+```{r}
+Graf.likert.cat(db[,c(35:37)],db[,4])
 ```
 
 
 # Autoaceitação
 
 ```{r}
-Autoaceitacao<-db[,c(39:44)]
+Autoaceitacao<-db[,c(38:40)]
 Graf.likert(Autoaceitacao)
 ```
+
 ```{r}
-Graf.likert.cat(db[,c(39:44)],db[,5])
+Autoaceitacao<-db[,c(41:43)]
+Graf.likert(Autoaceitacao)
 ```
 
+
+
+```{r}
+Graf.likert.cat(db[,c(38:40)],db[,4])
+```
+
+
+```{r}
+Graf.likert.cat(db[,c(41:43)],db[,4])
+```
 
 # Estrutura e localização da instituição de trabalho
 
 ```{r}
-Local.Trab<-db[,c(45:48)]
+Local.Trab<-db[,c(44:45)]
 Graf.likert(Local.Trab)
 ```
+
 ```{r}
-Graf.likert.cat(db[,c(45:48)],db[,5])
+Local.Trab<-db[,c(46:47)]
+Graf.likert(Local.Trab)
 ```
 
+
+
+```{r}
+Graf.likert.cat(db[,c(44:45)],db[,4])
+```
+
+
+```{r}
+Graf.likert.cat(db[,c(46:47)],db[,4])
+```
 
 # Sucesso profissional
 
 ```{r}
-Sucesso.Prof<-db[,50]
+Sucesso.Prof<-db[,49]
 Graf.likert(Sucesso.Prof)
 ```
 
 
 
 ```{r}
-a<-Graf.likert.cat(db[,50],db[,5])
+a<-Graf.likert.cat(db[,49],db[,4])
 
 plot(likert(as.data.frame(a$`Atualmente me considero um profissional bem sucedido na área de educação`),grouping=a$`Atualmente considere sua maior carga horária`))+ theme(axis.text.y = element_text(size="10"))
 

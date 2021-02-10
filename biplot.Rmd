@@ -1,0 +1,195 @@
+---
+title: "biplot"
+author: "Mateus Reis"
+date: "09/02/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(FactoMineR)
+library(factoextra)
+library(tm)
+db<-read_csv("/home/mateus/Dropbox/TCC_mateus_reis/TCC/PROGRAMAÇÃO/tcc-sucesso-profissional-professor-matem-tica-df/base_tcc.csv")
+
+
+biplot<-function(df){
+ 
+  df[] <- lapply(df, gsub, pattern = "Discordo parcialmente.", replacement = "Discordo")
+  df[] <- lapply(df, gsub, pattern = "Concordo parcialmente.", replacement = "Concordo")
+  df[] <- lapply(df, gsub, pattern = "Concordo totalmente.", replacement = "Concordo")
+  df[] <- lapply(df, gsub, pattern = "Discordo totalmente.", replacement = "Discordo")
+  df[] <- lapply(df, removePunctuation)
+  df[] <- lapply(df, str_replace, pattern = "Trabalha na Rede Federal Instituto Federal de Brasília", replacement = "IFB")
+  df[] <- lapply(df, gsub, pattern = "Na Secretaria de Educação do Distrito Federal", replacement = "SEEDF")
+  
+  
+  res.mca<-MCA(df)
+  
+  grupo<-as.factor(df$`Atualmente considere sua maior carga horária`)
+  
+  grupo1<-as.factor(df$`Atualmente me considero um profissional bem sucedido na área de educação`)
+  
+  return(fviz_mca_biplot(res.mca,addEllipses = grupo1, habillage = grupo, repel = T,
+                         axes = c(1, 3), col.var = "black",
+                col.ind = grupo1 ,legend.title = "Atualmente me considero \n um  profissional bem \n sucedido na área de educação") )
+  
+}
+
+#https://operdata.com.br/blog/analise-de-componentes-principais-pca-calculo-e-aplicacao-no-r/
+
+```
+
+```{r}
+biplot(db[,c(4,15,49)])
+```
+
+
+```{r}
+biplot(db[,c(4,16,49)])
+```
+
+```{r}
+biplot(db[,c(4,17,49)])
+```  
+  
+```{r}
+biplot(db[,c(4,18,49)])
+
+```  
+
+```{r}
+biplot(db[,c(4,19,49)])
+```
+
+```{r}
+biplot(db[,c(4,20,49)])
+```
+
+```{r}
+biplot(db[,c(4,21,49)])
+```
+
+```{r}
+biplot(db[,c(4,22,49)])
+```
+
+```{r}
+biplot(db[,c(4,23,49)])
+```
+
+```{r}
+biplot(db[,c(4,24,49)])
+```
+
+```{r}
+biplot(db[,c(4,25,49)])
+```
+
+```{r}
+biplot(db[,c(4,26,49)])
+```
+
+```{r}
+biplot(db[,c(4,27,49)])
+```
+
+```{r}
+biplot(db[,c(4,28,49)])
+```
+
+```{r}
+biplot(db[,c(4,29,49)])
+```
+
+```{r}
+biplot(db[,c(4,30,49)])
+```
+
+```{r}
+biplot(db[,c(4,31,49)])
+```
+
+
+```{r}
+biplot(db[,c(4,32,49)])
+```
+
+```{r}
+biplot(db[,c(4,33,49)])
+```
+
+```{r}
+biplot(db[,c(4,34,49)])
+```
+
+```{r}
+biplot(db[,c(4,35,49)])
+```
+
+```{r}
+biplot(db[,c(4,36,49)])
+```
+
+```{r}
+biplot(db[,c(4,37,49)])
+```
+
+```{r}
+biplot(db[,c(4,38,49)])
+```
+
+```{r}
+biplot(db[,c(4,39,49)])
+```
+
+```{r}
+biplot(db[,c(4,41,49)])
+```
+
+```{r}
+biplot(db[,c(4,42,49)])
+```
+
+```{r}
+biplot(db[,c(4,43,49)])
+```
+
+```{r}
+biplot(db[,c(4,44,49)])
+```
+
+```{r}
+biplot(db[,c(4,45,49)])
+```
+
+```{r}
+biplot(db[,c(4,46,49)])
+```
+
+```{r}
+biplot(db[,c(4,47,49)])
+```
+
+
+
+```{r}
+biplot(db[,c(4,49)])
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

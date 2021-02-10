@@ -49,7 +49,6 @@ funcao_nuvem2<-function(df){
   
 }
 
-
 # Resultados: RESTA SALVAR TABELAS E WORDCLOUDS
 
 ## Me considero ou não me considero um professor de sucesso porque
